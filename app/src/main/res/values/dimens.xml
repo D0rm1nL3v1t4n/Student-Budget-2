@@ -4,6 +4,11 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding">16dp</dimen>
+
+    <dimen name="wide_button">380dp</dimen>
+    <dimen name="text_size_heading">40sp</dimen>
+    <dimen name="text_size_subheading">30sp</dimen>
+    <dimen name="text_size_button">18sp</dimen>
+
 </resources>

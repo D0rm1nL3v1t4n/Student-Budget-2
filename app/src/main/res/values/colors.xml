@@ -3,4 +3,8 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="weekBudgetPBarColour">#ed811c</color>
+    <color name="monthBudgetPBarColour">#4b1eed</color>
+
 </resources>
