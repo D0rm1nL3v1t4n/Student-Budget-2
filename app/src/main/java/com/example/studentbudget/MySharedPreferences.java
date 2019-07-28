@@ -11,7 +11,6 @@ public class MySharedPreferences {
 
     public static final String KEY_BUDGET = "budget";
     public static final String KEY_EXPENSES = "expenses";
-    public static final String[] KEY_ALL = {KEY_BUDGET, KEY_EXPENSES};
 
     Context mContext;
     String mPreferenceKey;
@@ -25,16 +24,15 @@ public class MySharedPreferences {
         mPreferenceKey = preferenceKey;
     }
 
-    public void writePreferenceData(float[] values, int[] index) {
+    public void writePreferenceData(float budget, float expenses) {
         /*
         values - the values to be stored in the sharedPreference
          */
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(mPreferenceKey, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        for (int i = 0; i < index.length; ++i) {
-            editor.putFloat(KEY_ALL[index[i]], values[i]);
-            editor.commit();
-        }
+        editor.putFloat(KEY_BUDGET, budget);
+        editor.putFloat(KEY_EXPENSES, expenses);
+        editor.commit();
     }
 
     public float readPreferenceData(String searchKey) {
@@ -46,21 +44,12 @@ public class MySharedPreferences {
         return sharedPreferences.getFloat(searchKey, 0);
     }
 
-    public float[] getAllData() {
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences(mPreferenceKey, Context.MODE_PRIVATE);
-        float[] data = new float[KEY_ALL.length];
-        for (int i = 0; i < KEY_ALL.length; ++i) {
-            Log.d("READING SP", "Key: " + KEY_ALL[i] + ", Data: " + data[i]);
-        }
-        return data;
-    }
-
     public void resetSharedPreferenceData() {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(mPreferenceKey, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        for (int i = 0; i < KEY_ALL.length; ++i) {
-            editor.putFloat(KEY_ALL[i], 0);
-        }
+        editor.putFloat(KEY_BUDGET, 0);
+        editor.putFloat(KEY_EXPENSES, 0);
+        editor.commit();
     }
 
 

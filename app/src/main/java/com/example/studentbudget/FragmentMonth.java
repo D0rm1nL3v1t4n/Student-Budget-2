@@ -1,25 +1,36 @@
 package com.example.studentbudget;
 
-
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class FragmentMonth extends Fragment {
 
     View view;
-    private MySharedPreferences sp;
-    private float budget;
-    private float expenses;
+    MySharedPreferences sp;
+    DatabaseHelper db;
+    float budget;
+    float expenses;
+    String month;
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+
+    final int LARGEST_EXPENSES_COUNT = 3;
+    String[] expenseName = new String[LARGEST_EXPENSES_COUNT];
+    String[] expenseCategoryColour = new String[LARGEST_EXPENSES_COUNT];
+    String[] expenseCategoryName = new String[LARGEST_EXPENSES_COUNT];
+    float[] expensePrice = new float[LARGEST_EXPENSES_COUNT];
+    String[] expenseDate = new String[LARGEST_EXPENSES_COUNT];
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,21 +41,102 @@ public class FragmentMonth extends Fragment {
 
     private void operations() {
         sp = new MySharedPreferences(getActivity(), MySharedPreferences.PREFERENCE_MONTH_KEY);
-        getData();
+        db = new DatabaseHelper(getActivity());
+        budget = getBudget();
+        expenses = getExpenses();
+        month = getMonth();
+        getLargestExpenses();
         showData();
     }
 
-    private void getData() {
-        budget = sp.readPreferenceData(MySharedPreferences.KEY_BUDGET);
-        expenses = sp.readPreferenceData(MySharedPreferences.KEY_EXPENSES);
+    private float getBudget() {
+        return sp.readPreferenceData(MySharedPreferences.KEY_BUDGET);
+
+    }
+
+    private float getExpenses() {
+        return sp.readPreferenceData(MySharedPreferences.KEY_EXPENSES);
+    }
+
+    private String getMonth() {
+        Calendar monthNumberCalendar = Calendar.getInstance();
+        monthNumberCalendar.setTime(new Date());
+        switch (monthNumberCalendar.get(Calendar.MONTH)) {
+            case 0:
+                return "January";
+            case 1:
+                return "February";
+            case 2:
+                return "March";
+            case 3:
+                return "April";
+            case 4:
+                return "May";
+            case 5:
+                return "June";
+            case 6:
+                return "July";
+            case 7:
+                return "August";
+            case 8:
+                return "September";
+            case 9:
+                return "October";
+            case 10:
+                return "November";
+            case 11:
+                return "December";
+        }
+        return null;
+    }
+
+    private void getLargestExpenses() {
+        String dateToday = sdf.format(new Date());
+        String[] dateTodayArray = dateToday.split("/");
+        String dateMonthStart = "01/" + dateTodayArray[2] + dateTodayArray[3] + "/" + dateTodayArray[4] + dateTodayArray[5];
+        String query = "select * from " + DatabaseHelper.TABLE_EXPENSES + " where " + DatabaseHelper.COL_DATE +
+                " between date('" + dateToday + "') and date('" + dateMonthStart + "') order by " + DatabaseHelper.COL_PRICE + ";" ;
+        Cursor expenseData = db.myQuery(query);
+        expenseData.moveToFirst();
+        int iterationCount = LARGEST_EXPENSES_COUNT;
+        if (expenseData.getCount() < 3)
+            iterationCount = expenseData.getCount();
+        int categoryId;
+        for (int i = 0; i < iterationCount; ++i) {
+            categoryId = getExpenseData(expenseData, i);
+            Cursor categoryData = db.searchData(DatabaseHelper.TABLE_CATEGORIES, "*", DatabaseHelper.COL_ID, categoryId);
+            getCategoryData(categoryData, i);
+            expenseData.moveToNext();
+        }
+    }
+
+    private int getExpenseData(Cursor expenseData, int i) {
+        expenseName[i] = expenseData.getString(1);
+        expensePrice[i] = expenseData.getFloat(2);
+        expenseDate[i] = expenseData.getString(4);
+        return expenseData.getInt(3);
+    }
+
+    private void getCategoryData(Cursor categoryData, int i) {
+        categoryData.moveToFirst();
+        expenseCategoryName[i] = categoryData.getString(1);
+        expenseCategoryColour[i] = categoryData.getString(2);
+    }
+
+    private void setupListAdapter() {
+        ListView largestExpensesListView = view.findViewById(R.id.monthLargestExpensesListView);
+        ExpensesListAdapter expensesListAdapter = new ExpensesListAdapter(getActivity(), expenseCategoryColour, expenseName, expenseCategoryName, expensePrice, expenseDate);
+        largestExpensesListView.setAdapter(expensesListAdapter);
     }
 
     private void showData() {
+        TextView monthHeadingTextView = view.findViewById(R.id.monthBudgetTabHeadingTextView);
         ProgressBar budgetProgressBar = view.findViewById(R.id.monthBudgetPBar);
         TextView budgetPercentageTextView = view.findViewById(R.id.monthBudgetPercentageTextView);
         TextView expensesValueTextView = view.findViewById(R.id.monthExpensesValueTextView);
         TextView budgetValueTextView = view.findViewById(R.id.monthBudgetValueTextView);
 
+        monthHeadingTextView.setText(month + " budget");
         float budgetPercentage = expenses * 100 / budget;
         budgetProgressBar.setProgress(Math.round(budgetPercentage));
         budgetPercentageTextView.setText(Math.round(10 * budgetPercentage) / 10 + "%");

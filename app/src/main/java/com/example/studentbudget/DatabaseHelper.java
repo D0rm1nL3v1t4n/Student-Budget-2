@@ -164,4 +164,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+    public Cursor myQuery(String myQuery) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery(myQuery, null);
+        return data;
+    }
+
 }

@@ -10,5 +10,6 @@
     <dimen name="text_size_heading">40sp</dimen>
     <dimen name="text_size_subheading">30sp</dimen>
     <dimen name="text_size_button">18sp</dimen>
+    <dimen name="list_view_width">350dp</dimen>
 
 </resources>
