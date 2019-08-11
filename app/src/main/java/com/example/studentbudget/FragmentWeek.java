@@ -31,7 +31,7 @@ public class FragmentWeek extends Fragment {
     String[] expenseName = new String[LARGEST_EXPENSES_COUNT];
     String[] expenseCategoryColour = new String[LARGEST_EXPENSES_COUNT];
     String[] expenseCategoryName = new String[LARGEST_EXPENSES_COUNT];
-    float[] expensePrice = new float[LARGEST_EXPENSES_COUNT];
+    String[] expensePrice = new String[LARGEST_EXPENSES_COUNT];
     String[] expenseDate = new String[LARGEST_EXPENSES_COUNT];
 
     @Override
@@ -48,7 +48,6 @@ public class FragmentWeek extends Fragment {
         expenses = getExpenses(sp);
         weekNumber = getWeekNumber();
         weekBeginning = getWeekBeginning(weekNumber);
-        initialiseEmptyData();
         getLargestExpensesData();
         setupListAdapter();
         showData();
@@ -65,7 +64,7 @@ public class FragmentWeek extends Fragment {
     public static int getWeekNumber() {
         Calendar weekNumCalendar = Calendar.getInstance();
         weekNumCalendar.setTime(new Date());
-        return weekNumCalendar.get(Calendar.WEEK_OF_MONTH);
+        return weekNumCalendar.get(Calendar.WEEK_OF_YEAR);
     }
 
     public static Date getWeekBeginning(int weekNumber) {
@@ -76,11 +75,11 @@ public class FragmentWeek extends Fragment {
         return weekStartCalendar.getTime();
     }
 
-    private void initialiseEmptyData() {
+    private void initialiseDefaultData() {
         for (int i = 0; i < LARGEST_EXPENSES_COUNT; ++i) {
             expenseCategoryColour[i] = "";
             expenseName[i] = "None";
-            expensePrice[i] = 0;
+            expensePrice[i] = "";
             expenseCategoryName[i] = "";
             expenseDate[i] = "";
         }
@@ -90,29 +89,29 @@ public class FragmentWeek extends Fragment {
         String dateToday = sdf.format(new Date());
         String dateWeekStart = sdf.format(weekBeginning);
         String query = "select * from " + DatabaseHelper.TABLE_EXPENSES + " where " + DatabaseHelper.COL_DATE +
-                " between date('" + dateToday + "') and date('" + dateWeekStart + "') order by " + DatabaseHelper.COL_PRICE + ";" ;
+                " between date('" + dateToday + "') and date('" + dateWeekStart + "') order by " + DatabaseHelper.COL_PRICE + " desc limit " + LARGEST_EXPENSES_COUNT + ";" ;
         Cursor expenseData = db.myQuery(query);
         expenseData.moveToFirst();
-        int iterationCount = LARGEST_EXPENSES_COUNT;
-        if (expenseData.getCount() < 3)
-            iterationCount = expenseData.getCount();
-        int categoryId;
-        for (int i = 0; i < iterationCount; ++i) {
-            categoryId = getExpenseData(expenseData, i);
-            Cursor categoryData = db.searchData(DatabaseHelper.TABLE_CATEGORIES, "*", DatabaseHelper.COL_ID, categoryId);
-            getCategoryData(categoryData, i);
+        int iterations = LARGEST_EXPENSES_COUNT;
+        if (expenseData.getCount() < 3) {
+            iterations = expenseData.getCount();
+            initialiseDefaultData();
+        }
+        for (int i = 0; i < iterations; ++i) {
+            getCategoryData(getExpenseData(expenseData, i), i);
             expenseData.moveToNext();
         }
     }
 
     private int getExpenseData(Cursor expenseData, int i) {
         expenseName[i] = expenseData.getString(1);
-        expensePrice[i] = expenseData.getFloat(2);
+        expensePrice[i] = "£" + expenseData.getFloat(2);
         expenseDate[i] = expenseData.getString(4);
         return expenseData.getInt(3);
     }
 
-    private void getCategoryData(Cursor categoryData, int i) {
+    private void getCategoryData(int categoryId, int i) {
+        Cursor categoryData = db.searchData(DatabaseHelper.TABLE_CATEGORIES, "*", DatabaseHelper.COL_ID, categoryId);
         categoryData.moveToFirst();
         expenseCategoryName[i] = categoryData.getString(1);
         expenseCategoryColour[i] = categoryData.getString(2);
@@ -131,7 +130,7 @@ public class FragmentWeek extends Fragment {
         TextView expensesValueTextView = view.findViewById(R.id.weekExpensesValueTextView);
         TextView budgetValueTextView = view.findViewById(R.id.weekBudgetValueTextView);
 
-        weekHeadingTextView.setText("Week (" + weekNumber + ") beginning " + weekBeginning + " budget");
+        weekHeadingTextView.setText("Week " + weekNumber + " " + sdf.format(weekBeginning) + " budget");
         float budgetPercentage = expenses * 100 / budget;
         if (expenses == 0 && budget == 0)
             budgetPercentage = 0;

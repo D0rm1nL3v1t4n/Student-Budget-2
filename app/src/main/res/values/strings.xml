@@ -8,17 +8,12 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_budget">Budget</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_expenses">Expenses</string>
+    <string name="menu_categories">Categories</string>
 
     <string name="tab_text_1">Week</string>
     <string name="tab_text_2">Month</string>
+    <string name="expenses_heading">Expenses</string>
 
     <string name="week_edit_budget_button">Edit weekly budget</string>
     <string name="month_edit_budget_button">Edit monthly budget</string>
@@ -34,5 +29,31 @@
     <string name="price_text">Price</string>
     <string name="date_text">Date</string>
 
+    <string name="add_expense_button">Add expense</string>
+    <string name="recent_expenses_text">Recent expenses:</string>
+
+    <string name="add_expense_button_text">Add Expense</string>
+    <string name="expense_name">Name</string>
+    <string name="hint_expense_name">Enter expense name</string>
+    <string name="expense_price">Price</string>
+    <string name="hint_expense_price">Enter expense price (£)</string>
+    <string name="expense_category">Category</string>
+    <string name="expense_date">Date</string>
+    <string name="expense_today">Today?</string>
+
+    <string name="save_button">Save</string>
+
+    <string name="categories_heading">Categories</string>
+    <string name="add_category_button">Add Category</string>
+    <string name="my_categories_subheading">My Categories:</string>
+
+    <string name="category_name">Name</string>
+    <string name="category_colour">Colour</string>
+    <string name="hint_category_name">Enter Category Name</string>
+    <string name="confirm">Select</string>
+    <string name="cancel">Cancel</string>
+
+
+    <string name="set_colour_button">Set Colour</string>
 
 </resources>

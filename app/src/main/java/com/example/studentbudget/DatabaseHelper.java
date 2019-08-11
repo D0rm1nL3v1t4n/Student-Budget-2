@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.Date;
 
@@ -32,7 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_DATE = "date";
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 5);
         mContext = context;
     }
 
@@ -54,7 +55,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //db.execSQL("DROP TABLE IF EXISTS");
+        db.execSQL("DROP TABLE IF EXISTS BudgetTerm");
+
+        //resetDatabase(db);
+
+    }
+
+    private void resetDatabase(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MONTHLY_BUDGET_HISTORY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_WEEKLY_BUDGET_HISTORY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
+        createWeeklyBudgetHistory(db);
+        createMonthlyBudgetHistory(db);
+        createCategories(db);
         createExpenses(db);
     }
 
@@ -99,25 +113,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void insertIntoWeeklyBudgetHistory(float budget, float expenses, Date weekBeginning, int weekNumber) {
         SQLiteDatabase db = this.getWritableDatabase();
         int maxId = getMaxId(TABLE_WEEKLY_BUDGET_HISTORY) + 1;
-        db.execSQL("INSERT INTO " + TABLE_WEEKLY_BUDGET_HISTORY + " VALUES (" + maxId + ", " + budget + ", " + expenses + ", " + weekBeginning + ", " + weekNumber + " )");
+        db.execSQL("INSERT INTO " + TABLE_WEEKLY_BUDGET_HISTORY + " VALUES (" + maxId + ", " + budget + ", " + expenses + ", " + weekBeginning + ", " + weekNumber + ");");
     }
 
     public void insertIntoMonthlyBudgetHistory(float budget, float expenses, String month) {
         SQLiteDatabase db = this.getWritableDatabase();
         int maxId = getMaxId(TABLE_MONTHLY_BUDGET_HISTORY) + 1;
-        db.execSQL("INSERT INTO " + TABLE_MONTHLY_BUDGET_HISTORY + " VALUES (" + maxId + ", " + budget + ", " + expenses + ",  " + month + ")");
+        db.execSQL("INSERT INTO " + TABLE_MONTHLY_BUDGET_HISTORY + " VALUES (" + maxId + ", " + budget + ", " + expenses + ",  '" + month + "');");
     }
 
-    public void insertToCategories(String name, String colour) {
+    public void insertIntoCategories(String name, String colour) {
         SQLiteDatabase db = this.getWritableDatabase();
         int maxId = getMaxId(TABLE_CATEGORIES) + 1;
-        db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " VALUES (" + maxId + ", " + name + ", " + colour + " )");
+        db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " VALUES (" + maxId + ", '" + name + "', '" + colour + "');");
     }
 
-    public void insertToExpenses(String name, float price, int catId, String date) {
+    public void insertIntoExpenses(String name, float price, int catId, Date date) {
         SQLiteDatabase db = this.getWritableDatabase();
         int maxId = getMaxId(TABLE_EXPENSES) + 1;
-        db.execSQL("INSERT INTO " + TABLE_EXPENSES + " VALUES (" + maxId + ", " + name + ", " + price + ", " + catId + ", " + date + " )");
+        db.execSQL("INSERT INTO " + TABLE_EXPENSES + " VALUES (" + maxId + ", '" + name + "', " + price + ", " + catId + ", " + date + ");");
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,7 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + TABLE_CATEGORIES + " ( " +
                 COL_ID + " integer primary key, " +
                 COL_NAME + " text, " +
-                COL_COLOUR + " text );");
+                COL_COLOUR + " text);");
     }
 
     private void createExpenses(SQLiteDatabase db) {

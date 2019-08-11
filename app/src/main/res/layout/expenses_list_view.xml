@@ -22,7 +22,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/name_text"
         android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/colouredRectangleView"
+        app:layout_constraintStart_toEndOf="@+id/categoryColourView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -47,12 +47,13 @@
         app:layout_constraintTop_toBottomOf="@+id/priceTextView" />
 
     <View
-        android:id="@+id/colouredRectangleView"
+        android:id="@+id/categoryColourView"
         android:layout_width="20dp"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

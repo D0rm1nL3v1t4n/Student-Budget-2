@@ -2,7 +2,6 @@ package com.example.studentbudget;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +13,11 @@ public class ExpensesListAdapter extends BaseAdapter {
     String[] mColours;
     String[] mNames;
     String[] mCategories;
-    float[] mPrices;
+    String[] mPrices;
     String[] mDates;
     LayoutInflater mInflater;
 
-    public ExpensesListAdapter(Context context, String[] colours, String[] names, String[] categories, float[] prices, String[] dates) {
+    public ExpensesListAdapter(Context context, String[] colours, String[] names, String[] categories, String[] prices, String[] dates) {
         mColours = colours;
         mNames = names;
         mCategories = categories;
@@ -46,7 +45,7 @@ public class ExpensesListAdapter extends BaseAdapter {
     public View getView(int i, View convertView, ViewGroup parent) {
         View view = mInflater.inflate(R.layout.expenses_list_view, null);
 
-        View colouredRectangleView = view.findViewById(R.id.colouredRectangleView);
+        View colouredRectangleView = view.findViewById(R.id.categoryColourView);
         TextView nameTextView = view.findViewById(R.id.nameTextView);
         TextView categoryTextView = view.findViewById(R.id.categoryTextView);
         TextView priceTextView = view.findViewById(R.id.priceTextView);
@@ -56,7 +55,7 @@ public class ExpensesListAdapter extends BaseAdapter {
             colouredRectangleView.setBackgroundColor(Color.parseColor(mColours[i]));
         nameTextView.setText(mNames[i]);
         categoryTextView.setText(mCategories[i]);
-        priceTextView.setText(mPrices[i] + "");
+        priceTextView.setText(mPrices[i]);
         dateTextView.setText(mDates[i]);
 
         return view;

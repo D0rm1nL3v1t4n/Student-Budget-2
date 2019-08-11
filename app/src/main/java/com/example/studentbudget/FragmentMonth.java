@@ -29,7 +29,7 @@ public class FragmentMonth extends Fragment {
     String[] expenseName = new String[LARGEST_EXPENSES_COUNT];
     String[] expenseCategoryColour = new String[LARGEST_EXPENSES_COUNT];
     String[] expenseCategoryName = new String[LARGEST_EXPENSES_COUNT];
-    float[] expensePrice = new float[LARGEST_EXPENSES_COUNT];
+    String[] expensePrice = new String[LARGEST_EXPENSES_COUNT];
     String[] expenseDate = new String[LARGEST_EXPENSES_COUNT];
 
     @Override
@@ -45,7 +45,9 @@ public class FragmentMonth extends Fragment {
         budget = getBudget();
         expenses = getExpenses();
         month = getMonth();
+        initialiseDefaultData();
         getLargestExpenses();
+        setupListAdapter();
         showData();
     }
 
@@ -90,34 +92,42 @@ public class FragmentMonth extends Fragment {
         return null;
     }
 
+    private void initialiseDefaultData() {
+        for (int i = 0; i < LARGEST_EXPENSES_COUNT; ++i) {
+            expenseCategoryColour[i] = "";
+            expenseName[i] = "None";
+            expensePrice[i] = "";
+            expenseCategoryName[i] = "";
+            expenseDate[i] = "";
+        }
+    }
+
     private void getLargestExpenses() {
         String dateToday = sdf.format(new Date());
         String[] dateTodayArray = dateToday.split("/");
-        String dateMonthStart = "01/" + dateTodayArray[2] + dateTodayArray[3] + "/" + dateTodayArray[4] + dateTodayArray[5];
+        String dateMonthStart = "01/" + dateTodayArray[1] + "/" + dateTodayArray[2];
         String query = "select * from " + DatabaseHelper.TABLE_EXPENSES + " where " + DatabaseHelper.COL_DATE +
-                " between date('" + dateToday + "') and date('" + dateMonthStart + "') order by " + DatabaseHelper.COL_PRICE + ";" ;
+                " between date('" + dateToday + "') and date('" + dateMonthStart + "') order by " + DatabaseHelper.COL_PRICE + " desc limit " + LARGEST_EXPENSES_COUNT + ";" ;
         Cursor expenseData = db.myQuery(query);
         expenseData.moveToFirst();
         int iterationCount = LARGEST_EXPENSES_COUNT;
         if (expenseData.getCount() < 3)
             iterationCount = expenseData.getCount();
-        int categoryId;
         for (int i = 0; i < iterationCount; ++i) {
-            categoryId = getExpenseData(expenseData, i);
-            Cursor categoryData = db.searchData(DatabaseHelper.TABLE_CATEGORIES, "*", DatabaseHelper.COL_ID, categoryId);
-            getCategoryData(categoryData, i);
+            getCategoryData(getExpenseData(expenseData, i), i);
             expenseData.moveToNext();
         }
     }
 
     private int getExpenseData(Cursor expenseData, int i) {
         expenseName[i] = expenseData.getString(1);
-        expensePrice[i] = expenseData.getFloat(2);
+        expensePrice[i] = "£" + expenseData.getFloat(2);
         expenseDate[i] = expenseData.getString(4);
         return expenseData.getInt(3);
     }
 
-    private void getCategoryData(Cursor categoryData, int i) {
+    private void getCategoryData(int categoryId, int i) {
+        Cursor categoryData = db.searchData(DatabaseHelper.TABLE_CATEGORIES, "*", DatabaseHelper.COL_ID, categoryId);
         categoryData.moveToFirst();
         expenseCategoryName[i] = categoryData.getString(1);
         expenseCategoryColour[i] = categoryData.getString(2);
