@@ -1,19 +1,24 @@
 package com.example.studentbudget;
 
+
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.text.DateFormatSymbols;
 
 public class FragmentMonth extends Fragment {
 
@@ -49,6 +54,8 @@ public class FragmentMonth extends Fragment {
         getLargestExpenses();
         setupListAdapter();
         showData();
+        editBudgetEvent();
+        viewBudgetHistoryEvent();
     }
 
     private float getBudget() {
@@ -63,33 +70,34 @@ public class FragmentMonth extends Fragment {
     private String getMonth() {
         Calendar monthNumberCalendar = Calendar.getInstance();
         monthNumberCalendar.setTime(new Date());
-        switch (monthNumberCalendar.get(Calendar.MONTH)) {
-            case 0:
-                return "January";
-            case 1:
-                return "February";
-            case 2:
-                return "March";
-            case 3:
-                return "April";
-            case 4:
-                return "May";
-            case 5:
-                return "June";
-            case 6:
-                return "July";
-            case 7:
-                return "August";
-            case 8:
-                return "September";
-            case 9:
-                return "October";
-            case 10:
-                return "November";
-            case 11:
-                return "December";
-        }
-        return null;
+//        switch (monthNumberCalendar.get(Calendar.MONTH)) {
+//            case 0:
+//                return "January";
+//            case 1:
+//                return "February";
+//            case 2:
+//                return "March";
+//            case 3:
+//                return "April";
+//            case 4:
+//                return "May";
+//            case 5:
+//                return "June";
+//            case 6:
+//                return "July";
+//            case 7:
+//                return "August";
+//            case 8:
+//                return "September";
+//            case 9:
+//                return "October";
+//            case 10:
+//                return "November";
+//            case 11:
+//                return "December";
+//        }
+//        return null;
+        return new DateFormatSymbols().getMonths()[monthNumberCalendar.get(Calendar.MONTH)];
     }
 
     private void initialiseDefaultData() {
@@ -154,4 +162,46 @@ public class FragmentMonth extends Fragment {
         budgetValueTextView.setText("£" + budget);
     }
 
+    private void editBudgetEvent() {
+        Button editBudgetButton = view.findViewById(R.id.monthEditBudgetButton);
+        editBudgetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), EditBudgetActivity.class);
+                intent.putExtra("EDIT_BUDGET_TYPE", "MONTH");
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void viewBudgetHistoryEvent() {
+        Cursor data = db.searchData(DatabaseHelper.TABLE_MONTHLY_BUDGET_HISTORY, "*");
+        final int count = data.getCount();
+        Button viewBudgetHistoryButton = view.findViewById(R.id.monthlyBudgetHistoryButton);
+        viewBudgetHistoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (count == 1) {
+                    Toast.makeText(getActivity(), "No monthly history data found.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Intent intent = new Intent(getActivity(), BudgetHistoryActivity.class);
+                    intent.putExtra("BUDGET_HISTORY_TYPE", "MONTH");
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        budget = getBudget();
+        expenses = getExpenses();
+        month = getMonth();
+        initialiseDefaultData();
+        getLargestExpenses();
+        setupListAdapter();
+        showData();
+    }
 }

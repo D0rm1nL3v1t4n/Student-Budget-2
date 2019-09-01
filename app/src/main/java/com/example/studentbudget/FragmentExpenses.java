@@ -7,12 +7,17 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -30,6 +35,8 @@ public class FragmentExpenses extends Fragment {
     String[] expensePrice = new String[RECENT_EXPENSE_COUNT];
     String[] expenseDate = new String[RECENT_EXPENSE_COUNT];
 
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy");
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_expenses, container, false);
@@ -39,12 +46,10 @@ public class FragmentExpenses extends Fragment {
 
     private void operations() {
         db = new DatabaseHelper(getActivity());
-        getRecentExpenses();
         initialiseDefaultData();
+        getRecentExpenses();
         setupExpensesAdapter();
         addExpenseClickEvent();
-
-
     }
 
     private void getRecentExpenses() {
@@ -55,17 +60,20 @@ public class FragmentExpenses extends Fragment {
             iterations = expenseData.getCount();
             initialiseDefaultData();
         }
-        expenseData.moveToFirst();
         for (int i = 0; i < iterations; ++i) {
+            expenseData.moveToPosition(i);
             categoryData(expenseData(expenseData, i), i);
-            expenseData.moveToNext();
         }
     }
 
     private int expenseData(Cursor expenseData, int i) {
         expenseName[i] = expenseData.getString(1);
         expensePrice[i] = "£" + expenseData.getFloat(2);
-        expenseDate[i] = expenseData.getString(4);
+        try {
+            expenseDate[i] = simpleDateFormat.format(simpleDateFormat.parse(expenseData.getString(4)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return expenseData.getInt(3);
     }
 
@@ -112,7 +120,10 @@ public class FragmentExpenses extends Fragment {
         });
     }
 
-
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getRecentExpenses();
+        setupExpensesAdapter();
+    }
 }

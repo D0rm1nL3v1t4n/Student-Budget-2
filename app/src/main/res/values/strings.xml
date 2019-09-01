@@ -41,7 +41,7 @@
     <string name="expense_date">Date</string>
     <string name="expense_today">Today?</string>
 
-    <string name="save_button">Save</string>
+
 
     <string name="categories_heading">Categories</string>
     <string name="add_category_button">Add Category</string>
@@ -53,7 +53,21 @@
     <string name="confirm">Select</string>
     <string name="cancel">Cancel</string>
 
-
     <string name="set_colour_button">Set Colour</string>
+
+    <string name="new_budget_text">New budget:</string>
+
+    <string name="my_budget">Budget:</string>
+    <string name="my_expenses">Expenses:</string>
+
+    <string name="view_category_heading">View Category</string>
+    <string name="delete_category_button">Delete Category</string>
+    <string name="category_already_exists_text">A category with that name\nalready exists.</string>
+
+
+    <string name="save_button">Save</string>
+    <string name="save_changes_button">Save Changes</string>
+    <string name="edit_button">Edit</string>
+    <string name="cancel_button">Cancel</string>
 
 </resources>

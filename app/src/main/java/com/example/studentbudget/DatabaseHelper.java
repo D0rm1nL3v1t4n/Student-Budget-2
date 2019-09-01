@@ -33,7 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_DATE = "date";
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 5);
+        super(context, DATABASE_NAME, null, 6);
         mContext = context;
     }
 
@@ -55,7 +55,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS BudgetTerm");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MONTHLY_BUDGET_HISTORY);
+        createMonthlyBudgetHistory(db);
 
         //resetDatabase(db);
 
@@ -83,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor searchData(String tableName, String returnCol, String searchCol, Object searchData) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("select " + returnCol + " from " + tableName + " where " + searchCol + " = " + searchData, null);
+        return db.rawQuery("select " + returnCol + " from " + tableName + " where " + searchCol + " = '" + searchData + "'", null);
     }
 
 //    public Cursor searchData(String tableName, String returnCol, String searchCol, int searchData) {
@@ -96,16 +97,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.rawQuery("select " + returnCol + " from " + tableName, null);
     }
 
+    public boolean searchUnique(String tableName, String column, String checkData) {
+        //true if data not repeat, false if data already exists
+        Cursor data = searchData(tableName, column);
+        if (data.getCount() == 0)
+            return true;
+        for (int i = 0; i < data.getCount(); ++i) {
+            if (data.getString(0) == checkData)
+                return false;
+        }
+        return true;
+    }
+
     public void clearTable(String tableName) {
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL("delete from " + tableName);
     }
 
-    public void updateData(String tableName, String updateCol, String newData, String searchCol, Object searchData) {
+    public void updateData(String tableName, String updateCol, Object newData, String searchCol, Object searchData) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("UPDATE " + tableName + " SET " + updateCol + " = '" + newData + "' WHERE " + searchCol + " = " + searchData);
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////// Functions to insert data ///////////////////////////////////////
@@ -113,13 +125,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void insertIntoWeeklyBudgetHistory(float budget, float expenses, Date weekBeginning, int weekNumber) {
         SQLiteDatabase db = this.getWritableDatabase();
         int maxId = getMaxId(TABLE_WEEKLY_BUDGET_HISTORY) + 1;
-        db.execSQL("INSERT INTO " + TABLE_WEEKLY_BUDGET_HISTORY + " VALUES (" + maxId + ", " + budget + ", " + expenses + ", " + weekBeginning + ", " + weekNumber + ");");
+        db.execSQL("INSERT INTO " + TABLE_WEEKLY_BUDGET_HISTORY + " VALUES (" + maxId + ", " + budget + ", " + expenses + ", '" + weekBeginning + "', " + weekNumber + ");");
     }
 
-    public void insertIntoMonthlyBudgetHistory(float budget, float expenses, String month) {
+    public void insertIntoMonthlyBudgetHistory(float budget, float expenses, int month) {
         SQLiteDatabase db = this.getWritableDatabase();
         int maxId = getMaxId(TABLE_MONTHLY_BUDGET_HISTORY) + 1;
-        db.execSQL("INSERT INTO " + TABLE_MONTHLY_BUDGET_HISTORY + " VALUES (" + maxId + ", " + budget + ", " + expenses + ",  '" + month + "');");
+        db.execSQL("INSERT INTO " + TABLE_MONTHLY_BUDGET_HISTORY + " VALUES (" + maxId + ", " + budget + ", " + expenses + ",  " + month + ");");
     }
 
     public void insertIntoCategories(String name, String colour) {
@@ -131,7 +143,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void insertIntoExpenses(String name, float price, int catId, Date date) {
         SQLiteDatabase db = this.getWritableDatabase();
         int maxId = getMaxId(TABLE_EXPENSES) + 1;
-        db.execSQL("INSERT INTO " + TABLE_EXPENSES + " VALUES (" + maxId + ", '" + name + "', " + price + ", " + catId + ", " + date + ");");
+        db.execSQL("INSERT INTO " + TABLE_EXPENSES + " VALUES (" + maxId + ", '" + name + "', " + price + ", " + catId + ", '" + date + "');");
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,7 +167,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_ID + " integer primary key, " +
                 COL_BUDGET + " float, " +
                 COL_EXPENSES + " float, " +
-                COL_MONTH + " text );");
+                COL_MONTH + " integer );");
     }
 
     private void createCategories(SQLiteDatabase db) {

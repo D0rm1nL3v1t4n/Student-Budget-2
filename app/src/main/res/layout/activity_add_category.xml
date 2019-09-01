@@ -64,11 +64,11 @@
             android:id="@+id/categoryColourTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="16dp"
             android:text="@string/category_colour"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="@+id/categoryNameTextView"
-            app:layout_constraintTop_toBottomOf="@+id/categoryNameTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/categoryWarningTextView" />
 
         <Button
             android:id="@+id/setColourButton"
@@ -102,6 +102,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/categorySelectedColourView" />
+
+        <TextView
+            android:id="@+id/categoryWarningTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/category_already_exists_text"
+            android:textColor="#FC0000"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/categoryNameEditText"
+            app:layout_constraintTop_toBottomOf="@+id/categoryNameEditText" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

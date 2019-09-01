@@ -1,10 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ViewCategoryActivity">
+
+    <TextView
+        android:id="@+id/viewCategoryColourTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/category_colour"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/viewCategoryNameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/viewCategoryNameTextView" />
+
+    <TextView
+        android:id="@+id/viewCategoryHeadingTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/view_category_heading"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_size_heading"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/viewCategoryNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/category_name"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewCategoryHeadingTextView" />
+
+    <EditText
+        android:id="@+id/viewCategoryNameEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/hint_category_name"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="@+id/viewCategoryNameTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/viewCategoryNameTextView"
+        app:layout_constraintTop_toTopOf="@+id/viewCategoryNameTextView" />
+
+    <Button
+        android:id="@+id/viewCategorySetColourButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/set_colour_button"
+        app:layout_constraintBottom_toBottomOf="@+id/viewCategorySelectedColourView"
+        app:layout_constraintStart_toEndOf="@+id/viewCategorySelectedColourView"
+        app:layout_constraintTop_toTopOf="@+id/viewCategorySelectedColourView" />
+
+    <View
+        android:id="@+id/viewCategorySelectedColourView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintStart_toStartOf="@+id/viewCategoryNameEditText"
+        app:layout_constraintTop_toTopOf="@+id/viewCategoryColourTextView" />
+
+    <Button
+        android:id="@+id/editCategoryButton"
+        android:layout_width="@dimen/wide_button"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/edit_button"
+        android:textSize="@dimen/text_size_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewCategorySelectedColourView" />
+
+    <Button
+        android:id="@+id/deleteCategoryButton"
+        android:layout_width="@dimen/wide_button"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="@string/delete_category_button"
+        android:textSize="@dimen/text_size_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/saveCategoryChangesButton"
+        android:layout_width="@dimen/wide_button"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/save_changes_button"
+        android:textSize="@dimen/text_size_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cancelCategoryEditButton" />
+
+    <Button
+        android:id="@+id/cancelCategoryEditButton"
+        android:layout_width="@dimen/wide_button"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:textSize="@dimen/text_size_button"
+        app:layout_constraintBottom_toBottomOf="@+id/editCategoryButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editCategoryButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

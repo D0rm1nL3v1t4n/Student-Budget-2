@@ -28,9 +28,15 @@ public class AddCategoryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         selectedColour = ContextCompat.getColor(AddCategoryActivity.this, R.color.colorPrimary);
+        hideCategoryWarningText();
         setSelectedColour();
         setColourEvent();
         saveClickEvent();
+    }
+
+    private void hideCategoryWarningText() {
+        TextView categoryWarningTextView = findViewById(R.id.categoryWarningTextView);
+        categoryWarningTextView.setVisibility(View.GONE);
     }
 
     private void setColourEvent() {
@@ -68,12 +74,17 @@ public class AddCategoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 TextView categoryNameEditText = findViewById(R.id.categoryNameEditText);
-                String hexColour = String.format("#%06X", (0xFFFFFF & selectedColour));
-                db.insertIntoCategories(categoryNameEditText.getText().toString(), hexColour);
-                Toast.makeText(getBaseContext(), "Category saved", Toast.LENGTH_SHORT).show();
-                finish();
+                if (db.searchUnique(DatabaseHelper.TABLE_CATEGORIES, DatabaseHelper.COL_NAME, categoryNameEditText.getText().toString())) {
+                    String hexColour = String.format("#%06X", (0xFFFFFF & selectedColour));
+                    db.insertIntoCategories(categoryNameEditText.getText().toString(), hexColour);
+                    Toast.makeText(getBaseContext(), "Category saved", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                else {
+                    TextView categoryWarningTextView = findViewById(R.id.categoryWarningTextView);
+                    categoryWarningTextView.setVisibility(View.VISIBLE);
+                }
             }
         });
-;
     }
 }

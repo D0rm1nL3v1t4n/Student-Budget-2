@@ -1,6 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/primaryBudgetDateInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/secondaryBudgetDateInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/primaryBudgetDateInfoTextView"
+        app:layout_constraintTop_toBottomOf="@+id/primaryBudgetDateInfoTextView" />
+
+    <TextView
+        android:id="@+id/budgetHistoryBudgetTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/my_budget"
+        app:layout_constraintStart_toEndOf="@+id/primaryBudgetDateInfoTextView"
+        app:layout_constraintTop_toTopOf="@+id/primaryBudgetDateInfoTextView" />
+
+    <TextView
+        android:id="@+id/budgetHistoryExpensesTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/my_expenses"
+        app:layout_constraintStart_toStartOf="@+id/budgetHistoryBudgetTextView"
+        app:layout_constraintTop_toBottomOf="@+id/budgetHistoryBudgetTextView" />
+
+    <TextView
+        android:id="@+id/budgetHistoryBudgetValTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/budgetHistoryBudgetTextView"
+        app:layout_constraintStart_toEndOf="@+id/budgetHistoryBudgetTextView"
+        app:layout_constraintTop_toTopOf="@+id/budgetHistoryBudgetTextView" />
+
+    <TextView
+        android:id="@+id/budgetHistoryExpensesValTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/budgetHistoryExpensesTextView"
+        app:layout_constraintStart_toStartOf="@+id/budgetHistoryBudgetValTextView"
+        app:layout_constraintTop_toTopOf="@+id/budgetHistoryExpensesTextView" />
+
+    <TextView
+        android:id="@+id/budgetHistoryBudgetPercentageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/budgetHistoryExpensesValTextView"
+        app:layout_constraintStart_toEndOf="@+id/budgetHistoryBudgetValTextView"
+        app:layout_constraintTop_toTopOf="@+id/budgetHistoryBudgetValTextView" />
+</androidx.constraintlayout.widget.ConstraintLayout>

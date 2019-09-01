@@ -25,9 +25,6 @@ public class MySharedPreferences {
     }
 
     public void writePreferenceData(float budget, float expenses) {
-        /*
-        values - the values to be stored in the sharedPreference
-         */
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(mPreferenceKey, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat(KEY_BUDGET, budget);
@@ -35,11 +32,22 @@ public class MySharedPreferences {
         editor.commit();
     }
 
+    public void writeBudgetData(float budget) {
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(mPreferenceKey, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat(KEY_BUDGET, budget);
+        editor.commit();
+    }
+
+    public void writeExpensesData(float expenses) {
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(mPreferenceKey, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat(KEY_EXPENSES, expenses);
+        editor.commit();
+    }
+
+
     public float readPreferenceData(String searchKey) {
-        /*
-        searchKey - the key being searched for in the SharedPreference 'file'
-            --> one of the constant strings provided above
-         */
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(mPreferenceKey, Context.MODE_PRIVATE);
         return sharedPreferences.getFloat(searchKey, 0);
     }

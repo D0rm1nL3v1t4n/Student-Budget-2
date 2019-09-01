@@ -68,7 +68,7 @@ public class AddExpenseActivity extends AppCompatActivity {
                 DatePicker expenseDateDP = findViewById(R.id.expenseDateDP);
                 if (isChecked) {
                     today = true;
-                    expenseDateDP.setVisibility(View.INVISIBLE);
+                    expenseDateDP.setVisibility(View.GONE);
                 }
                 else {
                     today = false;
