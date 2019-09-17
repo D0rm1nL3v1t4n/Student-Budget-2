@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,7 +26,7 @@ public class AddExpenseActivity extends AppCompatActivity {
 
     DatabaseHelper db;
     String[] categories;
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy");
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     Boolean today = false;
 
     @Override
@@ -32,23 +34,28 @@ public class AddExpenseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expense);
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         db = new DatabaseHelper(this);
-        categories = getAllCategories();
+        categories = getAllCategories(db);
         setupCategoriesSpinner();
         toggleDateSpinnerVisibility();
         saveEvent();
     }
 
-    private String[] getAllCategories() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return false;
+    }
+
+    private String[] getAllCategories(DatabaseHelper db) {
         Cursor data = db.searchData(DatabaseHelper.TABLE_CATEGORIES, DatabaseHelper.COL_NAME);
-        data.moveToFirst();
         String[] myCategories = new String[data.getCount()];
         for (int i = 0; i < data.getCount(); ++i) {
+            data.moveToPosition(i);
             myCategories[i] = data.getString(0);
-            data.moveToNext();
         }
         return myCategories;
     }
@@ -79,6 +86,8 @@ public class AddExpenseActivity extends AppCompatActivity {
     }
 
     private void saveEvent() {
+        final MySharedPreferences weekSp = new MySharedPreferences(this, MySharedPreferences.PREFERENCE_WEEK_KEY);
+        final MySharedPreferences monthSp = new MySharedPreferences(this, MySharedPreferences.PREFERENCE_MONTH_KEY);
         Button saveButton = findViewById(R.id.expenseSaveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,14 +100,20 @@ public class AddExpenseActivity extends AppCompatActivity {
                 if (!today) {
                     DatePicker expenseDateDP = findViewById(R.id.expenseDateDP);
                     try {
-                        expenseDate = simpleDateFormat.parse(expenseDateDP.getDayOfMonth() + "/" + expenseDateDP.getMonth() + 1 + "/" + expenseDateDP.getYear());
+                        int month = expenseDateDP.getMonth() + 1;
+                        expenseDate = sdf.parse(expenseDateDP.getDayOfMonth() + "/" + month + "/" + expenseDateDP.getYear());
                     }
                     catch (ParseException e) {
                         e.printStackTrace();
                     }
                 }
                 int categoryId = getCategoryId(expenseCategorySpinner.getSelectedItem().toString());
-                db.insertIntoExpenses(expenseNameEditText.getText().toString(), Float.parseFloat(expensePriceEditText.getText().toString()), categoryId, expenseDate);
+                float expenseValue = Float.parseFloat(expensePriceEditText.getText().toString());
+                db.insertIntoExpenses(expenseNameEditText.getText().toString(), expenseValue, categoryId, expenseDate);
+                float totalWeekExpenses = weekSp.readPreferenceData(MySharedPreferences.KEY_EXPENSES);
+                float totalMonthExpenses = monthSp.readPreferenceData(MySharedPreferences.KEY_EXPENSES);
+                weekSp.writeExpensesData(totalWeekExpenses + expenseValue);
+                monthSp.writeExpensesData(totalMonthExpenses + expenseValue);
                 Toast.makeText(getBaseContext(), "Expense saved", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -110,6 +125,4 @@ public class AddExpenseActivity extends AppCompatActivity {
         data.moveToFirst();
         return data.getInt(0);
     }
-
-
 }

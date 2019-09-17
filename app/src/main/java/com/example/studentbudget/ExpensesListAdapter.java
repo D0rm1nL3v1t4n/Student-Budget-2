@@ -51,8 +51,14 @@ public class ExpensesListAdapter extends BaseAdapter {
         TextView priceTextView = view.findViewById(R.id.priceTextView);
         TextView dateTextView = view.findViewById(R.id.dateTextView);
 
-        if (mColours[i] != "")
+        if (mColours[i] != "") {
             colouredRectangleView.setBackgroundColor(Color.parseColor(mColours[i]));
+        }
+        else {
+            colouredRectangleView.setVisibility(View.GONE);
+            //categoryTextView.setVisibility(View.GONE);
+            //dateTextView.setVisibility(View.GONE);
+        }
         nameTextView.setText(mNames[i]);
         categoryTextView.setText(mCategories[i]);
         priceTextView.setText(mPrices[i]);

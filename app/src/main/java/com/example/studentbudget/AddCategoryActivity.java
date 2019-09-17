@@ -8,8 +8,10 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,14 +26,20 @@ public class AddCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_category);
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         selectedColour = ContextCompat.getColor(AddCategoryActivity.this, R.color.colorPrimary);
         hideCategoryWarningText();
         setSelectedColour();
         setColourEvent();
         saveClickEvent();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return false;
     }
 
     private void hideCategoryWarningText() {
@@ -73,11 +81,12 @@ public class AddCategoryActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView categoryNameEditText = findViewById(R.id.categoryNameEditText);
+                EditText categoryNameEditText = findViewById(R.id.categoryNameEditText);
                 if (db.searchUnique(DatabaseHelper.TABLE_CATEGORIES, DatabaseHelper.COL_NAME, categoryNameEditText.getText().toString())) {
                     String hexColour = String.format("#%06X", (0xFFFFFF & selectedColour));
                     db.insertIntoCategories(categoryNameEditText.getText().toString(), hexColour);
                     Toast.makeText(getBaseContext(), "Category saved", Toast.LENGTH_SHORT).show();
+                    db.close();
                     finish();
                 }
                 else {

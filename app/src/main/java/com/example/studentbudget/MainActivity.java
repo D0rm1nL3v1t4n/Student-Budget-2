@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity
             float expenses = sp.readPreferenceData(MySharedPreferences.KEY_EXPENSES);
             Date weekBeginning = FragmentWeek.getWeekBeginning(currentWeekNumber - 1);
             db.insertIntoWeeklyBudgetHistory(budget, expenses, weekBeginning, currentWeekNumber - 1);
-            sp.resetSharedPreferenceData();
+            sp.writeExpensesData(0);
         }
     }
 
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity
             else
                 dataMonthNum = 11;
             db.insertIntoMonthlyBudgetHistory(budget, expenses, dataMonthNum);
-            sp.resetSharedPreferenceData();
+            sp.writeExpensesData(0);
         }
     }
 
@@ -154,11 +154,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_budget) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentBudgetTab()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentBudgetTab()).addToBackStack(null).commit();
         } else if (id == R.id.nav_expenses) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentExpenses()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentExpenses()).addToBackStack(null).commit();
         } else if (id == R.id.nav_categories) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentCategories()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentCategories()).addToBackStack(null).commit();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

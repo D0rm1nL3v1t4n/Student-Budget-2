@@ -154,7 +154,7 @@ public class FragmentMonth extends Fragment {
         TextView expensesValueTextView = view.findViewById(R.id.monthExpensesValueTextView);
         TextView budgetValueTextView = view.findViewById(R.id.monthBudgetValueTextView);
 
-        monthHeadingTextView.setText(month + " budget");
+        monthHeadingTextView.setText(month);
         float budgetPercentage = expenses * 100 / budget;
         budgetProgressBar.setProgress(Math.round(budgetPercentage));
         budgetPercentageTextView.setText(Math.round(10 * budgetPercentage) / 10 + "%");

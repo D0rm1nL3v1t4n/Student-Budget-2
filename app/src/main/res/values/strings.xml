@@ -42,7 +42,6 @@
     <string name="expense_today">Today?</string>
 
 
-
     <string name="categories_heading">Categories</string>
     <string name="add_category_button">Add Category</string>
     <string name="my_categories_subheading">My Categories:</string>
@@ -64,10 +63,15 @@
     <string name="delete_category_button">Delete Category</string>
     <string name="category_already_exists_text">A category with that name\nalready exists.</string>
 
+    <string name="view_all_expenses">View All Expenses</string>
+    <string name="my_expenses_heading">My Expenses</string>
+    <string name="view_expense_text">View Expense</string>
 
     <string name="save_button">Save</string>
     <string name="save_changes_button">Save Changes</string>
     <string name="edit_button">Edit</string>
     <string name="cancel_button">Cancel</string>
+
+    <string name="category_filter_text">Filter by\ncategory</string>
 
 </resources>

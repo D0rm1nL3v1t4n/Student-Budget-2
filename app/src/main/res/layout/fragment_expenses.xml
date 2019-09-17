@@ -63,4 +63,15 @@
         app:layout_constraintStart_toStartOf="@+id/addExpenseButton"
         app:layout_constraintTop_toBottomOf="@+id/addExpenseButton" />
 
+    <Button
+        android:id="@+id/viewAllExpensesButton"
+        android:layout_width="@dimen/wide_button"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/view_all_expenses"
+        android:textSize="@dimen/text_size_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recentExpensesListView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

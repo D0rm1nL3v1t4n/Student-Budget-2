@@ -10,11 +10,11 @@
             android:title="@string/menu_budget" />
         <item
             android:id="@+id/nav_expenses"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_expenses"
             android:title="@string/menu_expenses" />
         <item
             android:id="@+id/nav_categories"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_categories"
             android:title="@string/menu_categories" />
 
     </group>

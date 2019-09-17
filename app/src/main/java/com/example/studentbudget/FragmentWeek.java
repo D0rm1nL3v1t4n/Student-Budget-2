@@ -135,7 +135,7 @@ public class FragmentWeek extends Fragment {
         TextView expensesValueTextView = view.findViewById(R.id.weekExpensesValueTextView);
         TextView budgetValueTextView = view.findViewById(R.id.weekBudgetValueTextView);
 
-        weekHeadingTextView.setText("Week " + weekNumber + " " + sdf.format(weekBeginning) + " budget");
+        weekHeadingTextView.setText("Week " + weekNumber + " " + sdf.format(weekBeginning));
         float budgetPercentage = expenses * 100 / budget;
         if (expenses == 0 && budget == 0)
             budgetPercentage = 0;

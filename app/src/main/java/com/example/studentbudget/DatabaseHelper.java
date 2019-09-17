@@ -102,8 +102,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor data = searchData(tableName, column);
         if (data.getCount() == 0)
             return true;
+        data.moveToFirst();
         for (int i = 0; i < data.getCount(); ++i) {
-            if (data.getString(0) == checkData)
+            if (data.getString(0).toLowerCase().equals(checkData.toLowerCase()))
                 return false;
         }
         return true;

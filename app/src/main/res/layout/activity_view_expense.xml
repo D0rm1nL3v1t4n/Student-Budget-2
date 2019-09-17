@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ViewExpenseActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <DatePicker
+            android:id="@+id/viewExpenseDateDP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"
+            android:ems="10"
+            android:inputType="date"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/expenseCategorySpinner2"
+            app:layout_constraintStart_toStartOf="@+id/expenseCategorySpinner2"
+            app:layout_constraintTop_toBottomOf="@+id/expenseCategorySpinner2" />
+
+        <TextView
+            android:id="@+id/expenseDateTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="@string/expense_date"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="@+id/expenseCategoryTextView2"
+            app:layout_constraintTop_toTopOf="@+id/viewExpenseDateDP" />
+
+        <Spinner
+            android:id="@+id/expenseCategorySpinner2"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="@+id/viewExpensePriceEditText"
+            app:layout_constraintStart_toStartOf="@+id/viewExpensePriceEditText"
+            app:layout_constraintTop_toBottomOf="@+id/viewExpensePriceEditText" />
+
+        <TextView
+            android:id="@+id/expenseCategoryTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/expense_category"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/expenseCategorySpinner2"
+            app:layout_constraintStart_toStartOf="@+id/viewExpensePriceTextView"
+            app:layout_constraintTop_toTopOf="@+id/expenseCategorySpinner2" />
+
+        <EditText
+            android:id="@+id/viewExpensePriceEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:hint="@string/hint_expense_price"
+            android:inputType="numberDecimal"
+            app:layout_constraintEnd_toEndOf="@+id/viewExpenseNameEditText"
+            app:layout_constraintStart_toStartOf="@+id/viewExpenseNameEditText"
+            app:layout_constraintTop_toBottomOf="@+id/viewExpenseNameEditText" />
+
+        <EditText
+            android:id="@+id/viewExpenseNameEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:ems="10"
+            android:hint="@string/hint_expense_name"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="@+id/viewExpenseNameTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/viewExpenseNameTextView"
+            app:layout_constraintTop_toTopOf="@+id/viewExpenseNameTextView" />
+
+        <TextView
+            android:id="@+id/viewExpensePriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/expense_price"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/viewExpensePriceEditText"
+            app:layout_constraintStart_toStartOf="@+id/viewExpenseNameTextView"
+            app:layout_constraintTop_toTopOf="@+id/viewExpensePriceEditText" />
+
+        <TextView
+            android:id="@+id/viewExpenseNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="@string/expense_name"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewExpenseHeadingTextView" />
+
+        <TextView
+            android:id="@+id/viewExpenseHeadingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="@string/view_expense_text"
+            android:textAllCaps="true"
+            android:textSize="@dimen/text_size_heading"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/viewExpenseSaveChangesButton"
+            android:layout_width="@dimen/wide_button"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/save_changes_button"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.516"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewExpenseDateDP" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

@@ -3,6 +3,7 @@ package com.example.studentbudget;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.nfc.FormatException;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -35,7 +37,8 @@ public class FragmentExpenses extends Fragment {
     String[] expensePrice = new String[RECENT_EXPENSE_COUNT];
     String[] expenseDate = new String[RECENT_EXPENSE_COUNT];
 
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy");
+    SimpleDateFormat startSDF = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+    SimpleDateFormat endSDF = new SimpleDateFormat("dd/MM/yy");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,6 +53,8 @@ public class FragmentExpenses extends Fragment {
         getRecentExpenses();
         setupExpensesAdapter();
         addExpenseClickEvent();
+        expenseClickEvent();
+        viewAllExpensesClickEvent();
     }
 
     private void getRecentExpenses() {
@@ -70,7 +75,7 @@ public class FragmentExpenses extends Fragment {
         expenseName[i] = expenseData.getString(1);
         expensePrice[i] = "£" + expenseData.getFloat(2);
         try {
-            expenseDate[i] = simpleDateFormat.format(simpleDateFormat.parse(expenseData.getString(4)));
+            expenseDate[i] =  endSDF.format(startSDF.parse(expenseData.getString(4)));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -116,6 +121,29 @@ public class FragmentExpenses extends Fragment {
                 }
                 else
                     Toast.makeText(getActivity(),"Categories must be created before expenses can be added.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void expenseClickEvent() {
+        final ListView expensesListView = view.findViewById(R.id.recentExpensesListView);
+        expensesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), ViewExpenseActivity.class);
+                intent.putExtra("EXPENSE_NAME", expensesListView.getItemAtPosition(position).toString());
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void viewAllExpensesClickEvent() {
+        Button viewAllExpensesButton = view.findViewById(R.id.viewAllExpensesButton);
+        viewAllExpensesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MyExpensesActivity.class);
+                startActivity(intent);
             }
         });
     }

@@ -50,14 +50,13 @@ public class BudgetHistoryListAdapter extends BaseAdapter {
         TextView expensesValue = view.findViewById(R.id.budgetHistoryExpensesValTextView);
         TextView percentage = view.findViewById(R.id.budgetHistoryBudgetPercentageTextView);
 
-        if (mBudgetValues[i] != -1) {
-            primaryDateInfo.setText(mPrimaryDateInfo[i]);
-            secondaryDateInfo.setText(mSecondaryDateInfo[i]);
-            budgetValue.setText("£" + mBudgetValues[i]);
-            expensesValue.setText("£" + mExpensesValues[i]);
-            float budgetPercentageValue = Math.round(mExpensesValues[i] * 1000.0 / mBudgetValues[i]) / 10;
-            percentage.setText(budgetPercentageValue + "%");
-        }
+        primaryDateInfo.setText(mPrimaryDateInfo[i]);
+        secondaryDateInfo.setText(mSecondaryDateInfo[i]);
+        budgetValue.setText("£" + mBudgetValues[i]);
+        expensesValue.setText("£" + mExpensesValues[i]);
+
+        float budgetPercentageValue = Math.round(mExpensesValues[i] * 1000.0 / mBudgetValues[i]) / 10;
+        percentage.setText(budgetPercentageValue + "%");
 
         return view;
     }

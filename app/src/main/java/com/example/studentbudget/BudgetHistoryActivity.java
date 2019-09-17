@@ -6,9 +6,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class BudgetHistoryActivity extends AppCompatActivity {
 
@@ -20,19 +25,29 @@ public class BudgetHistoryActivity extends AppCompatActivity {
     float[] budgetValues;
     float[] expensesValues;
 
+    SimpleDateFormat startSDF = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+    SimpleDateFormat endSDF = new SimpleDateFormat("dd/MM/yy");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_budget_history);
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         isWeek = getIntentData();
         db = new DatabaseHelper(this);
 
+        setHeadingData();
         getHistoryData();
         setAdapter();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return false;
     }
 
     private Boolean getIntentData() {
@@ -44,6 +59,13 @@ public class BudgetHistoryActivity extends AppCompatActivity {
             return false;
     }
 
+    private void setHeadingData() {
+        TextView headingTextView = findViewById(R.id.budgetHistoryHeadingTextView);
+        if (isWeek)
+            headingTextView.setText("Weekly Budget History");
+        else
+            headingTextView.setText("Monthly Budget History");
+    }
 
     private void getHistoryData() {
         Cursor data;
@@ -54,16 +76,20 @@ public class BudgetHistoryActivity extends AppCompatActivity {
 
         int count = data.getCount();
 
-        primaryDateInfo = new String[count];
-        secondaryDateInfo = new String[count];
-        budgetValues = new float[count];
-        expensesValues = new float[count];
+        primaryDateInfo = new String[count - 1];
+        secondaryDateInfo = new String[count - 1];
+        budgetValues = new float[count - 1];
+        expensesValues = new float[count - 1];
 
-        data.moveToFirst();
-        for (int i = 0; i < count; ++i) {
+        for (int i = 0; i < count - 1; ++i) {
+            data.moveToPosition(i + 1);
             if (isWeek) {
-                primaryDateInfo[i] = data.getInt(4) + "";
-                secondaryDateInfo[i] = data.getString(3);
+                primaryDateInfo[i] = "Week " + data.getInt(4);
+                try {
+                    secondaryDateInfo[i] =  endSDF.format(startSDF.parse(data.getString(3)));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
             else {
                 primaryDateInfo[i] = new DateFormatSymbols().getMonths()[data.getInt(3)];
@@ -71,7 +97,7 @@ public class BudgetHistoryActivity extends AppCompatActivity {
             }
             budgetValues[i] = data.getFloat(1);
             expensesValues[i] = data.getFloat(2);
-            data.moveToNext();
+
         }
     }
 

@@ -1,0 +1,4 @@
+Fix largest monthly/weekly expenses - FragmentWeek & FragmentMonth
+Implement filter system on all expenses - MyExpensesActivity
+Implement 'View Expense' when expense clicked on - FragmentExpenses & MyExpensesActivity
+Implement save, edit & delete functionality of an expense - ViewExpenseActivity
