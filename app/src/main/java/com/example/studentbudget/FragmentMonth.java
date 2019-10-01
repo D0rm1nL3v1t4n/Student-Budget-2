@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,6 +37,9 @@ public class FragmentMonth extends Fragment {
     String[] expenseCategoryName = new String[LARGEST_EXPENSES_COUNT];
     String[] expensePrice = new String[LARGEST_EXPENSES_COUNT];
     String[] expenseDate = new String[LARGEST_EXPENSES_COUNT];
+
+    SimpleDateFormat startSDF = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+    SimpleDateFormat endSDF = new SimpleDateFormat("dd/MM/yy");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,33 +74,6 @@ public class FragmentMonth extends Fragment {
     private String getMonth() {
         Calendar monthNumberCalendar = Calendar.getInstance();
         monthNumberCalendar.setTime(new Date());
-//        switch (monthNumberCalendar.get(Calendar.MONTH)) {
-//            case 0:
-//                return "January";
-//            case 1:
-//                return "February";
-//            case 2:
-//                return "March";
-//            case 3:
-//                return "April";
-//            case 4:
-//                return "May";
-//            case 5:
-//                return "June";
-//            case 6:
-//                return "July";
-//            case 7:
-//                return "August";
-//            case 8:
-//                return "September";
-//            case 9:
-//                return "October";
-//            case 10:
-//                return "November";
-//            case 11:
-//                return "December";
-//        }
-//        return null;
         return new DateFormatSymbols().getMonths()[monthNumberCalendar.get(Calendar.MONTH)];
     }
 
@@ -113,24 +90,39 @@ public class FragmentMonth extends Fragment {
     private void getLargestExpenses() {
         String dateToday = sdf.format(new Date());
         String[] dateTodayArray = dateToday.split("/");
-        String dateMonthStart = "01/" + dateTodayArray[1] + "/" + dateTodayArray[2];
-        String query = "select * from " + DatabaseHelper.TABLE_EXPENSES + " where " + DatabaseHelper.COL_DATE +
-                " between date('" + dateToday + "') and date('" + dateMonthStart + "') order by " + DatabaseHelper.COL_PRICE + " desc limit " + LARGEST_EXPENSES_COUNT + ";" ;
+        String month = "01/" + dateTodayArray[1] + "/" + dateTodayArray[2];
+        int nextMonthNum = Integer.parseInt(dateTodayArray[1]) + 1;
+        String nextMonth = "01/" + nextMonthNum + "/" + dateTodayArray[2];
+
+        String query = "select * from " + DatabaseHelper.TABLE_EXPENSES + " order by " + DatabaseHelper.COL_PRICE + " desc;";
         Cursor expenseData = db.myQuery(query);
-        expenseData.moveToFirst();
-        int iterationCount = LARGEST_EXPENSES_COUNT;
-        if (expenseData.getCount() < 3)
-            iterationCount = expenseData.getCount();
-        for (int i = 0; i < iterationCount; ++i) {
-            getCategoryData(getExpenseData(expenseData, i), i);
-            expenseData.moveToNext();
+
+        int count = 0;
+        for (int i = 0; i < expenseData.getCount(); ++i) {
+            expenseData.moveToPosition(i);
+            Date date;
+            try {
+                date =  startSDF.parse(expenseData.getString(4));
+                if (date.compareTo(endSDF.parse(month)) >= 0 && date.compareTo(endSDF.parse(nextMonth)) < 0) {
+                    getCategoryData(getExpenseData(expenseData, count), count);
+                    ++count;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (count == 3)
+                return;
         }
     }
 
     private int getExpenseData(Cursor expenseData, int i) {
         expenseName[i] = expenseData.getString(1);
         expensePrice[i] = "£" + expenseData.getFloat(2);
-        expenseDate[i] = expenseData.getString(4);
+        try {
+            expenseDate[i] = endSDF.format(startSDF.parse(expenseData.getString(4)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return expenseData.getInt(3);
     }
 

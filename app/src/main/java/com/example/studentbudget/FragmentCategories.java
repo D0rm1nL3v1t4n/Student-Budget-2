@@ -36,21 +36,21 @@ public class FragmentCategories extends Fragment {
 
     private void operations() {
         db = new DatabaseHelper(getActivity());
-        getCategoriesData();
-        setupCategoriesList();
+        if (getCategoriesData())
+            setupCategoriesList();
+        else {
+            ListView categoriesListView = view.findViewById(R.id.categoriesListView);
+            categoriesListView.setVisibility(View.INVISIBLE);
+        }
         addCategoryEvent();
         categoryClickEvent();
     }
 
-    private void getCategoriesData() {
+    private Boolean getCategoriesData() {
         Cursor data = db.searchData(DatabaseHelper.TABLE_CATEGORIES, "*");
         int categoriesCount = data.getCount();
         if (categoriesCount == 0) {
-            categoryColours = new String[1];
-            categoryNames = new String[1];
-            categoryColours[0] = "";
-            categoryNames[0] = "";
-            return;
+            return false;
         }
         categoryColours = new String[categoriesCount];
         categoryNames = new String[categoriesCount];
@@ -60,6 +60,7 @@ public class FragmentCategories extends Fragment {
             categoryColours[i] = data.getString(2);
             data.moveToNext();
         }
+        return true;
     }
 
     private void setupCategoriesList() {

@@ -3,6 +3,7 @@ package com.example.studentbudget;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,6 +38,9 @@ public class FragmentWeek extends Fragment {
     String[] expenseCategoryName = new String[LARGEST_EXPENSES_COUNT];
     String[] expensePrice = new String[LARGEST_EXPENSES_COUNT];
     String[] expenseDate = new String[LARGEST_EXPENSES_COUNT];
+
+    SimpleDateFormat startSDF = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+    SimpleDateFormat endSDF = new SimpleDateFormat("dd/MM/yy");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -91,27 +96,37 @@ public class FragmentWeek extends Fragment {
     }
 
     private void getLargestExpensesData() {
-        String dateToday = sdf.format(new Date());
-        String dateWeekStart = sdf.format(weekBeginning);
-        String query = "select * from " + DatabaseHelper.TABLE_EXPENSES + " where " + DatabaseHelper.COL_DATE +
-                " between '" + dateToday + "' and '" + dateWeekStart + "' order by " + DatabaseHelper.COL_PRICE + " desc limit " + LARGEST_EXPENSES_COUNT + ";" ;
+        Date nextWeekStart = getWeekBeginning(weekNumber + 1);
+        initialiseDefaultData();
+        String query = "select * from " + DatabaseHelper.TABLE_EXPENSES + " order by " + DatabaseHelper.COL_PRICE + " desc;";
         Cursor expenseData = db.myQuery(query);
-        expenseData.moveToFirst();
-        int iterations = LARGEST_EXPENSES_COUNT;
-        if (expenseData.getCount() < 3) {
-            iterations = expenseData.getCount();
-            initialiseDefaultData();
-        }
-        for (int i = 0; i < iterations; ++i) {
-            getCategoryData(getExpenseData(expenseData, i), i);
-            expenseData.moveToNext();
+
+        int count = 0;
+        for (int i = 0; i < expenseData.getCount(); ++i) {
+            expenseData.moveToPosition(i);
+            Date date;
+            try {
+                date =  startSDF.parse(expenseData.getString(4));
+                if (date.compareTo(weekBeginning) >= 0 && date.compareTo(nextWeekStart) < 0) {
+                    getCategoryData(getExpenseData(expenseData, count), count);
+                    ++count;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (count == 3)
+                return;
         }
     }
 
     private int getExpenseData(Cursor expenseData, int i) {
         expenseName[i] = expenseData.getString(1);
         expensePrice[i] = "£" + expenseData.getFloat(2);
-        expenseDate[i] = expenseData.getString(4);
+        try {
+            expenseDate[i] = endSDF.format(startSDF.parse(expenseData.getString(4)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return expenseData.getInt(3);
     }
 

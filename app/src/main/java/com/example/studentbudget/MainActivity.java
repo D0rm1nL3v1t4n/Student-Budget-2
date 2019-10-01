@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DatabaseHelper db = new DatabaseHelper(this);
+
         checkNewWeek(db);
         checkNewMonth(db);
 
@@ -48,6 +49,18 @@ public class MainActivity extends AppCompatActivity
 
         if (savedInstanceState == null)
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentBudgetTab()).commit();
+    }
+
+    private void resetAllData(DatabaseHelper db) {
+        db.clearTable(DatabaseHelper.TABLE_CATEGORIES);
+        db.clearTable(DatabaseHelper.TABLE_EXPENSES);
+        db.clearTable(DatabaseHelper.TABLE_MONTHLY_BUDGET_HISTORY);
+        db.clearTable(DatabaseHelper.TABLE_WEEKLY_BUDGET_HISTORY);
+
+        MySharedPreferences weekSp = new MySharedPreferences(this, MySharedPreferences.PREFERENCE_WEEK_KEY);
+        MySharedPreferences monthSp = new MySharedPreferences(this, MySharedPreferences.PREFERENCE_MONTH_KEY);
+        weekSp.resetSharedPreferenceData();
+        monthSp.resetSharedPreferenceData();
     }
 
     private void checkNewWeek(DatabaseHelper db) {

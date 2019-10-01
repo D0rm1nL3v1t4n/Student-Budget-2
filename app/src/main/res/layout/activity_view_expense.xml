@@ -20,9 +20,9 @@
             android:ems="10"
             android:inputType="date"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="@+id/expenseCategorySpinner2"
-            app:layout_constraintStart_toStartOf="@+id/expenseCategorySpinner2"
-            app:layout_constraintTop_toBottomOf="@+id/expenseCategorySpinner2" />
+            app:layout_constraintEnd_toEndOf="@+id/viewExpenseCategorySpinner"
+            app:layout_constraintStart_toStartOf="@+id/viewExpenseCategorySpinner"
+            app:layout_constraintTop_toBottomOf="@+id/viewExpenseCategorySpinner" />
 
         <TextView
             android:id="@+id/expenseDateTextView2"
@@ -35,7 +35,7 @@
             app:layout_constraintTop_toTopOf="@+id/viewExpenseDateDP" />
 
         <Spinner
-            android:id="@+id/expenseCategorySpinner2"
+            android:id="@+id/viewExpenseCategorySpinner"
             android:layout_width="210dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -49,9 +49,9 @@
             android:layout_height="wrap_content"
             android:text="@string/expense_category"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/expenseCategorySpinner2"
+            app:layout_constraintBottom_toBottomOf="@+id/viewExpenseCategorySpinner"
             app:layout_constraintStart_toStartOf="@+id/viewExpensePriceTextView"
-            app:layout_constraintTop_toTopOf="@+id/expenseCategorySpinner2" />
+            app:layout_constraintTop_toTopOf="@+id/viewExpenseCategorySpinner" />
 
         <EditText
             android:id="@+id/viewExpensePriceEditText"

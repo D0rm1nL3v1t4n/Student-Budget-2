@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -14,6 +15,8 @@ import android.widget.Spinner;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyExpensesActivity extends AppCompatActivity {
 
@@ -38,7 +41,8 @@ public class MyExpensesActivity extends AppCompatActivity {
         String[] categories = getAllCategories(db);
         getExpensesData();
         setupCategoriesSpinner(categories);
-        setupExpensesListView();
+        setupAllExpensesListView();
+        filterSpinnerChangeEvent(categories);
     }
 
     @Override
@@ -69,8 +73,7 @@ public class MyExpensesActivity extends AppCompatActivity {
     }
 
     private void getExpensesData() {
-        String query = "select * from " + DatabaseHelper.TABLE_EXPENSES + " order by " + DatabaseHelper.COL_DATE + " desc;";
-        Cursor expenseData = db.myQuery(query);
+        Cursor expenseData = db.searchData(DatabaseHelper.TABLE_EXPENSES, "*");
         initialiseArrays(expenseData.getCount());
         for (int i = 0; i < expenseData.getCount(); ++i) {
             expenseData.moveToPosition(i);
@@ -104,9 +107,87 @@ public class MyExpensesActivity extends AppCompatActivity {
         expenseCategoryColour[i] = categoryData.getString(2);
     }
 
-    private void setupExpensesListView() {
+    private void setupAllExpensesListView() {
         ListView myExpensesListView = findViewById(R.id.myExpensesListView);
-        ExpensesListAdapter expensesListAdapter = new ExpensesListAdapter(this,expenseCategoryColour, expenseName, expenseCategoryName, expensePrice, expenseDate);
+        ExpensesListAdapter expensesListAdapter = new ExpensesListAdapter(this, expenseCategoryColour, expenseName, expenseCategoryName, expensePrice, expenseDate);
         myExpensesListView.setAdapter(expensesListAdapter);
+    }
+
+    private void filterSpinnerChangeEvent(final String[] categories) {
+        final Spinner categoryFilterSpinner = findViewById(R.id.categoryFilterSpinner);
+        categoryFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int index, long id) {
+                if (categories[index].equals("All"))
+                    setupAllExpensesListView();
+                else
+                    filterExpenses(categories[index]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //does this scenario exist?
+            }
+        });
+    }
+
+    private void filterExpenses(String categoryName) {
+        ListView myExpensesListView = findViewById(R.id.myExpensesListView);
+        List<Integer> indexes = new ArrayList<Integer>();
+        for (int i = 0; i < expenseName.length; ++i) {
+            if (expenseCategoryName[i].equals(categoryName)) {
+                indexes.add(i);
+            }
+        }
+        String[] catColour = new String[indexes.size()];
+        String[] name = new String[indexes.size()];
+        String[] catName = new String[indexes.size()];
+        String[] price = new String[indexes.size()];
+        String[] date = new String[indexes.size()];
+
+        for (int i = 0; i < indexes.size(); ++i) {
+            catColour[i] = expenseCategoryColour[indexes.get(i)];
+            name[i] = expenseName[indexes.get(i)];
+            catName[i] = expenseCategoryName[indexes.get(i)];
+            price[i] = expensePrice[indexes.get(i)];
+            date[i] = expenseDate[indexes.get(i)];
+        }
+
+        ExpensesListAdapter expensesListAdapter = new ExpensesListAdapter(this, catColour, name, catName, price, date);
+        myExpensesListView.setAdapter(expensesListAdapter);
+
+
+        //        ListView myExpensesListView = findViewById(R.id.myExpensesListView);
+//        List<String> tempCategoryColour = new ArrayList<String>();
+//        List<String> tempName = new ArrayList<String>();
+//        List<String> tempCategoryName = new ArrayList<String>();
+//        List<String> tempPrice = new ArrayList<String>();
+//        List<String> tempDate = new ArrayList<String>();
+//
+//        for (int i = 0; i < expenseName.length; ++i) {
+//            if (expenseCategoryName[i].equals(categoryName)) {
+//                tempCategoryColour.add(expenseCategoryColour[i]);
+//                tempName.add(expenseName[i]);
+//                tempCategoryName.add(expenseCategoryName[i]);
+//                tempPrice.add(expensePrice[i]);
+//                tempDate.add(expenseDate[i]);
+//            }
+//        }
+//
+//        String[] catColour = new String[tempCategoryColour.size()];
+//        String[] name = new String[tempName.size()];
+//        String[] catName = new String[tempCategoryName.size()];
+//        String[] price = new String[tempPrice.size()];
+//        String[] date = new String[tempDate.size()];
+//
+//        catColour = tempCategoryColour.toArray(catColour);
+//        name = tempName.toArray(name);
+//        catName = tempCategoryName.toArray(catName);
+//        price = tempPrice.toArray(price);
+//        date = tempDate.toArray(date);
+//
+//        ExpensesListAdapter expensesListAdapter = new ExpensesListAdapter(this, catColour, name, catName, price, date);
+//        myExpensesListView.setAdapter(expensesListAdapter);
+
     }
 }

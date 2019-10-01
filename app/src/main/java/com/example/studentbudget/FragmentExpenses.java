@@ -142,8 +142,14 @@ public class FragmentExpenses extends Fragment {
         viewAllExpensesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MyExpensesActivity.class);
-                startActivity(intent);
+                Cursor data = db.searchData(DatabaseHelper.TABLE_EXPENSES, DatabaseHelper.COL_ID);
+                if (data.getCount() > 0) {
+                    Intent intent = new Intent(getActivity(), MyExpensesActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(getActivity(), "You have no expenses to view.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
